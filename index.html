@@ -1,15 +1,150 @@
 <html>
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="css/jquery.mobile-1.4.5.min.css">
+    <script src="lib/jquery-1.11.1.min.js"></script>
+    <script src="lib/jquery.mobile-1.4.5.min.js"></script>
+    <style>
+        th {
+            background: #e9e9e9;
+        }
+    </style>
+
+
+</head>
 <body>
 
-<div class='header'><h1>Home</h1></div>
-<div class='search-view'>
-<input class='search-key' type="text"/>
-<ul class='employee-list'></ul>
-</div>
+    <div data-role="page" id="pageone">
+        <div data-role="header">
+            <h1>Dartball Score Keeper</h1>
+        </div>
 
-<script src="lib/jquery-1.8.2.min.js"></script>
-<script src="js/storage/memory-store.js"></script>
-<script src="js/main.js"></script>
-
+        <div data-role="main" class="ui-content">
+            <table data-role="table" class="ui-responsive" border="1">
+                <thead>
+                    <tr>
+                        <th style="text-align:center;" colspan="12">Inning</th>
+                    </tr>
+                    <tr>
+                        <th style="text-align:left;">Team</th>
+                        <th style="text-align:center;">1</th>
+                        <th style="text-align:center;">2</th>
+                        <th style="text-align:center;">3</th>
+                        <th style="text-align:center;">4</th>
+                        <th style="text-align:center;">5</th>
+                        <th style="text-align:center;">6</th>
+                        <th style="text-align:center;">7</th>
+                        <th style="text-align:center;">8</th>
+                        <th style="text-align:center;">9</th>
+                        <th style="text-align:center;">R</th>
+                        <th style="text-align:center;">H</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td style="text-align:left;background-color:yellow;">Team 1</td>
+                        <td style="text-align:center;"></td>
+                        <td style="text-align:center;"></td>
+                        <td style="text-align:center;"></td>
+                        <td style="text-align:center;"></td>
+                        <td style="text-align:center;"></td>
+                        <td style="text-align:center;"></td>
+                        <td style="text-align:center;"></td>
+                        <td style="text-align:center;"></td>
+                        <td style="text-align:center;"></td>
+                        <td style="text-align:center;">0</td>
+                        <td style="text-align:center;">0</td>
+                    </tr>
+                    <tr>
+                        <td style="text-align:left;">Team 2</td>
+                        <td style="text-align:center;"></td>
+                        <td style="text-align:center;"></td>
+                        <td style="text-align:center;"></td>
+                        <td style="text-align:center;"></td>
+                        <td style="text-align:center;"></td>
+                        <td style="text-align:center;"></td>
+                        <td style="text-align:center;"></td>
+                        <td style="text-align:center;"></td>
+                        <td style="text-align:center;"></td>
+                        <td style="text-align:center;">0</td>
+                        <td style="text-align:center;">0</td>
+                    </tr>
+                </tbody>
+            </table>
+            <p></p>
+            <table align="center">
+                <tr>
+                    <td style="text-align:right;">At Bat:</td>
+                    <td>Player 1</td>
+                </tr>
+                <tr>
+                    <td style="text-align:right;">On Deck:</td>
+                    <td>Player 1</td>
+                </tr>
+            </table>
+            <p></p>
+            <table align="center">
+                <tr>
+                    <td>
+                        <table style="width:100%;" align="center">
+                            <tr>
+                                <td style="text-align:right;">Balls:</td>
+                                <td>0</td>
+                            </tr>
+                            <tr>
+                                <td style="text-align:right;">Strikes:</td>
+                                <td>0</td>
+                            </tr>
+                            <tr>
+                                <td style="text-align:right;">Outs:</td>
+                                <td>0</td>
+                            </tr>
+                        </table>
+                    </td>
+                    <td>
+                        <table class="auto-style1">
+                            <tr>
+                                <td></td>
+                                <td><img src="img/OpenBase.jpg" /></td>
+                                <td></td>
+                            </tr>
+                            <tr>
+                                <td><img src="img/OpenBase.jpg" /></td>
+                                <td></td>
+                                <td><img src="img/OpenBase.jpg" /></td>
+                            </tr>
+                        </table>
+                    </td>
+                </tr>
+            </table>
+            <p></p>
+            <table align="center">
+                <tr>
+                    <td style="width:15%;text-align:center;border: 1px solid black;padding: 15px;background-color:#0099FF;font-weight:bold;text-shadow:none;">Ball</td>
+                    <td style="width:15%;text-align:center;border: 1px solid black;padding: 15px;background-color:#D6D6EB;font-weight:bold;text-shadow:none;">Strike</td>
+                    <td style="width:15%;text-align:center;border: 1px solid black;padding: 15px;background-color:#99FF99;font-weight:bold;text-shadow:none;">Foul</td>
+                    <td style="width:15%;text-align:center;border: 1px solid black;padding: 15px;background-color:#FF9900;font-weight:bold;text-shadow:none;">Out</td>
+                    <td style="width:15%;text-align:center;border: 1px solid black;padding: 15px;background-color:#D14719;font-weight:bold;text-shadow:none;">DP</td>
+                    <td style="width:15%;text-align:center;border: 1px solid black;padding: 15px;background-color:#D14719;font-weight:bold;text-shadow:none;">SH</td>
+                </tr>
+                <tr></tr>
+                <tr>
+                    <td style="width:15%;text-align:center;border: 1px solid black;padding: 15px;font-weight:bold;">Single</td>
+                    <td style="width:15%;text-align:center;border: 1px solid black;padding: 15px;font-weight:bold;">Double</td>
+                    <td style="width:15%;text-align:center;border: 1px solid black;padding: 15px;font-weight:bold;">Triple</td>
+                    <td style="width:15%;text-align:center;border: 1px solid black;padding: 15px;font-weight:bold;">HR</td>
+                    <td style="width:15%;text-align:center;border: 1px solid black;padding: 15px;font-weight:bold;">2BS</td>
+                    <td style="width:15%;text-align:center;border: 1px solid black;padding: 15px;font-weight:bold;">Undo</td>
+                </tr>
+            </table>
+            <p></p>
+            <table align="center">
+                <tr>
+                    <td style="width:45%;text-align:center;border: 1px solid black;padding: 15px;font-weight:bold;">Edit Teams</td>
+                    <td style="width:45%;text-align:center;border: 1px solid black;padding: 15px;font-weight:bold;">New Game</td>
+                </tr>
+            </table>
+        </div>
+    </div>
 </body>
 </html>
