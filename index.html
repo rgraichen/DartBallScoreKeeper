@@ -735,9 +735,6 @@
                 <table data-role="table" class="ui-responsive" border="1">
                     <thead>
                         <tr>
-                            <th style="text-align:center;" colspan="12">Inning</th>
-                        </tr>
-                        <tr>
                             <th style="text-align:left;">Team</th>
                             <th style="text-align:center;">1</th>
                             <th style="text-align:center;">2</th>
@@ -784,21 +781,22 @@
                     </tbody>
                 </table>
                 <p></p>
-                <table align="center">
+                <table style="width:100%;" align="center">
                     <tr>
-                        <td style="text-align:right;">At Bat:</td>
-                        <td id="atBat">T1 Player 1</td>
-                    </tr>
-                    <tr>
-                        <td style="text-align:right;">On Deck:</td>
-                        <td id="onDeck">T1 Player 1</td>
-                    </tr>
-                </table>
-                <p></p>
-                <table align="center">
-                    <tr>
-                        <td>
-                            <table style="width:100%;" align="center">
+                        <td style="width:33%;">
+                            <table align="center">
+                                <tr>
+                                    <td style="text-align:right;">At Bat:</td>
+                                    <td id="atBat">T1 Player 1</td>
+                                </tr>
+                                <tr>
+                                    <td style="text-align:right;">On Deck:</td>
+                                    <td id="onDeck">T1 Player 1</td>
+                                </tr>
+                            </table>
+                        </td>
+                        <td style="width:33%;">
+                            <table align="center">
                                 <tr>
                                     <td style="text-align:right;">Balls:</td>
                                     <td id="balls">0</td>
@@ -813,7 +811,7 @@
                                 </tr>
                             </table>
                         </td>
-                        <td>
+                        <td style="width:34%;">
                             <table class="auto-style1">
                                 <tr>
                                     <td></td>
@@ -832,28 +830,27 @@
                 <p></p>
                 <table align="center">
                     <tr>
-                        <td style="width:15%;text-align:center;border: 1px solid black;padding: 15px;background-color:#0099FF;font-weight:bold;text-shadow:none;" onclick="scoreDart('Ball');">Ball</td>
-                        <td style="width:15%;text-align:center;border: 1px solid black;padding: 15px;background-color:#D6D6EB;font-weight:bold;text-shadow:none;" onclick="scoreDart('Strike');">Strike</td>
-                        <td style="width:15%;text-align:center;border: 1px solid black;padding: 15px;background-color:#99FF99;font-weight:bold;text-shadow:none;" onclick="scoreDart('Foul');">Foul</td>
-                        <td style="width:15%;text-align:center;border: 1px solid black;padding: 15px;background-color:#FF9900;font-weight:bold;text-shadow:none;" onclick="scoreDart('Out');">Out</td>
-                        <td style="width:15%;text-align:center;border: 1px solid black;padding: 15px;background-color:#D14719;font-weight:bold;text-shadow:none;" onclick="scoreDart('DP');">DP</td>
-                        <td style="width:15%;text-align:center;border: 1px solid black;padding: 15px;background-color:#D14719;font-weight:bold;text-shadow:none;" onclick="scoreDart('SH');">SH</td>
+                        <td style="width:15%;"><button style="background:#0099FF;font-weight:bold;text-shadow:none;" onclick="scoreDart('Ball');">Ball</button></td>
+                        <td style="width:15%;"><button style="background:#D6D6EB;font-weight:bold;text-shadow:none;" onclick="scoreDart('Strike');">Strike</button></td>
+                        <td style="width:15%;"><button style="background:#99FF99;font-weight:bold;text-shadow:none;" onclick="scoreDart('Foul');">Foul</button></td>
+                        <td style="width:15%;"><button style="background:#FF9900;font-weight:bold;text-shadow:none;" onclick="scoreDart('Out');">Out</button></td>
+                        <td style="width:15%;"><button style="background:#D14719;font-weight:bold;text-shadow:none;" onclick="scoreDart('DP');">DP</button></td>
+                        <td style="width:15%;"><button style="background:#D14719;font-weight:bold;text-shadow:none;" onclick="scoreDart('SH');">SH</button></td>
                     </tr>
-                    <tr></tr>
                     <tr>
-                        <td style="width:15%;text-align:center;border: 1px solid black;padding: 15px;font-weight:bold;" onclick="scoreDart('Single');">Single</td>
-                        <td style="width:15%;text-align:center;border: 1px solid black;padding: 15px;font-weight:bold;" onclick="scoreDart('Double');">Double</td>
-                        <td style="width:15%;text-align:center;border: 1px solid black;padding: 15px;font-weight:bold;" onclick="scoreDart('Triple');">Triple</td>
-                        <td style="width:15%;text-align:center;border: 1px solid black;padding: 15px;font-weight:bold;" onclick="scoreDart('HR');">HR</td>
-                        <td style="width:15%;text-align:center;border: 1px solid black;padding: 15px;font-weight:bold;" onclick="scoreDart('2BS');">2BS</td>
-                        <td style="width:15%;text-align:center;border: 1px solid black;padding: 15px;font-weight:bold;" onclick="undo();">Undo</td>
+                        <td style="width:15%;"><input type="button" value="Single" onclick="scoreDart('Single');" /></td>
+                        <td style="width:15%;"><input type="button" value="Double" onclick="scoreDart('Double');" /></td>
+                        <td style="width:15%;"><input type="button" value="Triple" onclick="scoreDart('Triple');" /></td>
+                        <td style="width:15%;"><input type="button" value="HR" onclick="scoreDart('HR');" /></td>
+                        <td style="width:15%;"><input type="button" value="2BS" onclick="scoreDart('2BS');" /></td>
+                        <td style="width:15%;"><input type="button" value="Undo" onclick="undo();" /></td>
                     </tr>
                 </table>
                 <p></p>
                 <table align="center">
                     <tr>
-                        <td style="width:45%;text-align:center;border: 1px solid black;padding: 15px;font-weight:bold;" onclick="document.getElementById('main').style.display = 'none'; document.getElementById('teams').style.display = '';">Edit Teams</td>
-                        <td style="width:45%;text-align:center;border: 1px solid black;padding: 15px;font-weight:bold;" onclick="scoreDart('NewGame');">New Game</td>
+                        <td style="width:45%;"><input type="button" value="Edit Teams" onclick="document.getElementById('main').style.display = 'none'; document.getElementById('teams').style.display = '';" /></td>
+                        <td style="width:45%;"><input type="button" value="New Game" onclick="scoreDart('NewGame');" /></td>
                     </tr>
                 </table>
             </div>
@@ -933,7 +930,7 @@
                 <p></p>
                 <table align="center">
                     <tr>
-                        <td style="width:45%;text-align:center;border: 1px solid black;padding: 15px;font-weight:bold;" onclick="saveTeams(); document.getElementById('main').style.display = ''; document.getElementById('teams').style.display = 'none';">Done</td>
+                        <td style="width:45%;"><input type="button" value="Save" onclick="saveTeams(); document.getElementById('main').style.display = ''; document.getElementById('teams').style.display = 'none';" /></td>
                     </tr>
                 </table>
             </div>
