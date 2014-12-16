@@ -10,6 +10,717 @@
         }
     </style>
 
+    <script>
+
+        var awayTeamName = "Team 1";
+        var homeTeamName = "Team 2";
+        var awayPlayers = ["T1 Player 1", "", "", "", "", "", "", "", ""];
+        var homePlayers = ["T2 Player 1", "", "", "", "", "", "", "", ""];
+        var awayBatterIdx = 0;
+        var homeBatterIdx = 0;
+        var awayOnDeckIdx = 0;
+        var homeOnDeckIdx = 0;
+        var balls = 0;
+        var strikes = 0;
+        var outs = 0;
+        var onFirst = false;
+        var onSecond = false;
+        var onThird = false;
+        var awayHits = 0;
+        var homeHits = 0;
+        var awayRuns = 0;
+        var homeRuns = 0;
+        var awayInningRuns = ["", "", "", "", "", "", "", "", ""];
+        var homeInningRuns = ["", "", "", "", "", "", "", "", ""];
+        var teamAtBat = "AWAY";
+        var inning = 0;
+        var runs = 0;
+        var gameOver = false;
+        var darts = [];
+
+        function scoreDart(action) {
+            if (action == "NewGame") {
+                if (confirm('Are you sure you want to start a new game?')) {
+
+                    outs = 0;
+                    balls = 0;
+                    strikes = 0;
+                    awayBatterIdx = 0;
+                    homeBatterIdx = 0;
+                    onFirst = false;
+                    onSecond = false;
+                    onThird = false;
+                    awayHits = 0;
+                    homeHits = 0;
+                    awayRuns = 0;
+                    homeRuns = 0;
+                    teamAtBat = "AWAY";
+                    inning = 0;
+                    runs = 0;
+                    gameOver = false;
+                    darts = [];
+
+                    awayInningRuns = ["", "", "", "", "", "", "", "", ""];
+                    homeInningRuns = ["", "", "", "", "", "", "", "", ""];
+
+                    awayOnDeckIdx = awayBatterIdx + 1
+                    if (awayOnDeckIdx > 8) {
+                        awayOnDeckIdx = 0;
+                    }
+                    for (i = awayOnDeckIdx; i < 9; i++) {
+                        if (awayPlayers[i] != "") {
+                            awayOnDeckIdx = i;
+                            break;
+                        }
+                    }
+                    if (awayPlayers[awayOnDeckIdx] == "") {
+                        awayOnDeckIdx = 0;
+                    }
+
+                    homeOnDeckIdx = homeBatterIdx + 1;
+                    if (homeOnDeckIdx > 8) {
+                        homeOnDeckIdx = 0;
+                    }
+                    for (i = homeOnDeckIdx; i < 9; i++) {
+                        if (homePlayers[i] != "") {
+                            homeOnDeckIdx = i;
+                            break;
+                        }
+                    }
+                    if (homePlayers[homeOnDeckIdx] == "") {
+                        homeOnDeckIdx = 0;
+                    }
+                }
+            }
+
+            if (action == "Ball" && !gameOver) {
+                darts[darts.length] = action;
+                balls = balls + 1;
+                if (balls >= 4) {
+                    if (onFirst) {
+                        if (onSecond) {
+                            if (onThird) {
+                                runs = runs + 1;
+                                if (teamAtBat == "AWAY") {
+                                    awayRuns = awayRuns + 1;
+                                }
+                                else {
+                                    homeRuns = homeRuns + 1;
+                                }
+                            }
+                            else {
+                                onThird = true;
+                            }
+                        }
+                        else {
+                            onSecond = true;
+                        }
+                    }
+                    else {
+                        onFirst = true;
+                    }
+                    nextBatter();
+                    balls = 0;
+                    strikes = 0;
+                }
+            }
+
+            if (action == "Strike" && !gameOver) {
+                darts[darts.length] = action;
+                strikes = strikes + 1;
+
+                if (strikes == 3) {
+                    outs = outs + 1;
+                    balls = 0;
+                    strikes = 0;
+                    nextBatter();
+                }
+            }
+
+            if (action == "Foul" && !gameOver) {
+                if (strikes < 2) {
+                    darts[darts.length] = action;
+                    strikes = strikes + 1;
+                }
+            }
+
+            if (action == "Out" && !gameOver) {
+                darts[darts.length] = action;
+                outs = outs + 1;
+                balls = 0;
+                strikes = 0;
+                nextBatter();
+            }
+
+            if (action == "Single" && !gameOver) {
+                darts[darts.length] = action;
+                if (teamAtBat == "AWAY") {
+                    awayHits = awayHits + 1;
+                }
+                else {
+                    homeHits = homeHits + 1;
+                }
+
+                if (onThird) {
+                    runs = runs + 1;
+                    if (teamAtBat == "AWAY") {
+                        awayRuns = awayRuns + 1;
+                    }
+                    else {
+                        homeRuns = homeRuns + 1;
+                    }
+                    onThird = false;
+                }
+
+                if (onSecond) {
+                    onThird = true;
+                    onSecond = false;
+                }
+
+                if (onFirst) {
+                    onSecond = true;
+                }
+
+                onFirst = true;
+                balls = 0;
+                strikes = 0;
+
+                nextBatter();
+
+            }
+
+            if (action == "Double" && !gameOver) {
+                darts[darts.length] = action;
+                if (teamAtBat == "AWAY") {
+                    awayHits = awayHits + 1;
+                }
+                else {
+                    homeHits = homeHits + 1;
+                }
+
+                if (onThird) {
+                    runs = runs + 1;
+                    if (teamAtBat == "AWAY") {
+                        awayRuns = awayRuns + 1
+                    }
+                    else {
+                        homeRuns = homeRuns + 1
+                    }
+                    onThird = false;
+                }
+
+                if (onSecond) {
+                    runs = runs + 1;
+                    if (teamAtBat == "AWAY") {
+                        awayRuns = awayRuns + 1;
+                    }
+                    else {
+                        homeRuns = homeRuns + 1;
+                    }
+                    onSecond = false;
+                }
+
+                if (onFirst) {
+                    onThird = true;
+                }
+
+                onFirst = false;
+                onSecond = true;
+                balls = 0;
+                strikes = 0;
+                nextBatter();
+            }
+
+            if (action == "Triple" && !gameOver) {
+                darts[darts.length] = action;
+                if (teamAtBat == "AWAY") {
+                    awayHits = awayHits + 1;
+                }
+                else {
+                    homeHits = homeHits + 1;
+                }
+
+
+                if (onThird) {
+                    runs = runs + 1;
+                    if (teamAtBat == "AWAY") {
+                        awayRuns = awayRuns + 1;
+                    }
+                    else {
+                        homeRuns = homeRuns + 1;
+                    }
+                }
+
+                if (onSecond) {
+                    runs = runs + 1;
+                    if (teamAtBat == "AWAY") {
+                        awayRuns = awayRuns + 1;
+                    }
+                    else {
+                        homeRuns = homeRuns + 1;
+                    }
+                }
+
+                if (onFirst) {
+                    runs = runs + 1;
+                    if (teamAtBat == "AWAY") {
+                        awayRuns = awayRuns + 1;
+                    }
+                    else {
+                        homeRuns = homeRuns + 1;
+                    }
+                }
+
+                onFirst = false;
+                onSecond = false;
+                onThird = true;
+                balls = 0;
+                strikes = 0;
+                nextBatter();
+            }
+
+            if (action == "HR" && !gameOver) {
+                darts[darts.length] = action;
+                if (teamAtBat == "AWAY") {
+                    awayHits = awayHits + 1;
+                }
+                else {
+                    homeHits = homeHits + 1;
+                }
+                runs = runs + 1;
+                if (teamAtBat == "AWAY") {
+                    awayRuns = awayRuns + 1;
+                }
+                else {
+                    homeRuns = homeRuns + 1;
+                }
+
+                if (onThird) {
+                    runs = runs + 1;
+                    if (teamAtBat == "AWAY") {
+                        awayRuns = awayRuns + 1;
+                    }
+                    else {
+                        homeRuns = homeRuns + 1;
+                    }
+                }
+
+                if (onSecond) {
+                    runs = runs + 1;
+                    if (teamAtBat == "AWAY") {
+                        awayRuns = awayRuns + 1;
+                    }
+                    else {
+                        homeRuns = homeRuns + 1;
+                    }
+                }
+
+                if (onFirst) {
+                    runs = runs + 1;
+                    if (teamAtBat == "AWAY") {
+                        awayRuns = awayRuns + 1;
+                    }
+                    else {
+                        homeRuns = homeRuns + 1;
+                    }
+                }
+
+                onFirst = false;
+                onSecond = false;
+                onThird = false;
+                balls = 0;
+                strikes = 0;
+                nextBatter();
+            }
+
+            if (action == "DP" && !gameOver) {
+                darts[darts.length] = action;
+                outs = outs + 1;
+                if (onThird) {
+                    outs = outs + 1;
+                    onThird = false;
+                }
+                else {
+                    if (onSecond) {
+                        outs = outs + 1;
+                        onSecond = false;
+                    }
+                    else {
+                        if (onFirst) {
+                            outs = outs + 1;
+                            onFirst = false;
+                        }
+                    }
+                }
+                balls = 0;
+                strikes = 0;
+                nextBatter();
+            }
+
+            if (action == "SH" && !gameOver) {
+                darts[darts.length] = action;
+                outs = outs + 1;
+                if (outs < 3) {
+                    if (onThird) {
+                        runs = runs + 1;
+                        if (teamAtBat == "AWAY") {
+                            awayRuns = awayRuns + 1;
+                        }
+                        else {
+                            homeRuns = homeRuns + 1;
+                        }
+                        onThird = false;
+                    }
+                    if (onSecond) {
+                        onThird = true;
+                        onSecond = false;
+                    }
+                    if (onFirst) {
+                        onSecond = true;
+                    }
+                }
+                onFirst = false;
+                balls = 0;
+                strikes = 0;
+                nextBatter();
+            }
+
+            if (action == "2BS" && !gameOver) {
+                darts[darts.length] = action;
+                if (teamAtBat == "AWAY") {
+                    awayHits = awayHits + 1;
+                }
+                else {
+                    homeHits = homeHits + 1;
+                }
+
+                if (onFirst) {
+                    if (onSecond) {
+                        runs = runs + 1;
+                        if (teamAtBat == "AWAY") {
+                            awayRuns = awayRuns + 1;
+                        }
+                        else {
+                            homeRuns = homeRuns + 1;
+                        }
+                    }
+                    if (onThird) {
+                        runs = runs + 1;
+                        if (teamAtBat == "AWAY") {
+                            awayRuns = awayRuns + 1;
+                        }
+                        else {
+                            homeRuns = homeRuns + 1;
+                        }
+                    }
+                    onThird = true;
+                }
+                else {
+                    if (onSecond) {
+                        runs = runs + 1;
+                        if (teamAtBat == "AWAY") {
+                            awayRuns = awayRuns + 1;
+                        }
+                        else {
+                            homeRuns = homeRuns + 1;
+                        }
+                        onSecond = false;
+                    }
+                    if (onThird) {
+                        runs = runs + 1;
+                        if (teamAtBat == "AWAY") {
+                            awayRuns = awayRuns + 1;
+                        }
+                        else {
+                            homeRuns = homeRuns + 1;
+                        }
+                        onThird = false;
+                    }
+                }
+
+                onFirst = true;
+                balls = 0;
+                strikes = 0;
+                nextBatter();
+            }
+
+            if (outs >= 3) {
+                if (teamAtBat == "AWAY") {
+                    awayInningRuns[inning] = "" + runs;
+                }
+                else {
+                    homeInningRuns[inning] = "" + runs;
+                }
+                runs = 0;
+
+                if (teamAtBat == "AWAY") {
+                    teamAtBat = "HOME";
+                    homeOnDeckIdx = homeBatterIdx + 1;
+                    if (homeOnDeckIdx > 8) {
+                        homeOnDeckIdx = 0;
+                    }
+                    for (i = homeOnDeckIdx; i < 9; i++) {
+                        if (homePlayers[i] != "") {
+                            homeOnDeckIdx = i;
+                            break;
+                        }
+                    }
+                    if (homePlayers[homeOnDeckIdx] == "") {
+                        homeOnDeckIdx = 0;
+                    }
+                }
+                else {
+                    teamAtBat = "AWAY";
+                    awayOnDeckIdx = awayBatterIdx + 1
+                    if (awayOnDeckIdx > 8) {
+                        awayOnDeckIdx = 0;
+                    }
+                    for (i = awayOnDeckIdx; i < 9; i++) {
+                        if (awayPlayers[i] != "") {
+                            awayOnDeckIdx = i;
+                            break;
+                        }
+                    }
+                    if (awayPlayers[awayOnDeckIdx] == "") {
+                        awayOnDeckIdx = 0;
+                    }
+                    if (inning < 8 || awayRuns == homeRuns) {
+                        inning = inning + 1;
+                    }
+                    else {
+                        gameOver = true;
+                        alert("Game Over!");
+                    }
+                }
+                outs = 0;
+                balls = 0;
+                strikes = 0;
+                onFirst = false;
+                onSecond = false;
+                onThird = false;
+            }
+
+            document.getElementById("awayTeam").innerHTML = awayTeamName;
+            document.getElementById("homeTeam").innerHTML = homeTeamName;
+
+            document.getElementById("away1Runs").innerHTML = awayInningRuns[0];
+            document.getElementById("away2Runs").innerHTML = awayInningRuns[1];
+            document.getElementById("away3Runs").innerHTML = awayInningRuns[2];
+            document.getElementById("away4Runs").innerHTML = awayInningRuns[3];
+            document.getElementById("away5Runs").innerHTML = awayInningRuns[4];
+            document.getElementById("away6Runs").innerHTML = awayInningRuns[5];
+            document.getElementById("away7Runs").innerHTML = awayInningRuns[6];
+            document.getElementById("away8Runs").innerHTML = awayInningRuns[7];
+            document.getElementById("away9Runs").innerHTML = awayInningRuns[8];
+
+            document.getElementById("home1Runs").innerHTML = homeInningRuns[0];
+            document.getElementById("home2Runs").innerHTML = homeInningRuns[1];
+            document.getElementById("home3Runs").innerHTML = homeInningRuns[2];
+            document.getElementById("home4Runs").innerHTML = homeInningRuns[3];
+            document.getElementById("home5Runs").innerHTML = homeInningRuns[4];
+            document.getElementById("home6Runs").innerHTML = homeInningRuns[5];
+            document.getElementById("home7Runs").innerHTML = homeInningRuns[6];
+            document.getElementById("home8Runs").innerHTML = homeInningRuns[7];
+            document.getElementById("home9Runs").innerHTML = homeInningRuns[8];
+
+            document.getElementById("awayRuns").innerHTML = awayRuns;
+            document.getElementById("homeRuns").innerHTML = homeRuns;
+
+            document.getElementById("awayHits").innerHTML = awayHits;
+            document.getElementById("homeHits").innerHTML = homeHits;
+
+            if (teamAtBat == "AWAY") {
+                document.getElementById("atBat").innerHTML = awayPlayers[awayBatterIdx];
+                document.getElementById("onDeck").innerHTML = awayPlayers[awayOnDeckIdx];
+                document.getElementById("awayTeam").style.backgroundColor = "yellow";
+                document.getElementById("homeTeam").style.backgroundColor = "white";
+            }
+            else {
+                document.getElementById("atBat").innerHTML = homePlayers[homeBatterIdx];
+                document.getElementById("onDeck").innerHTML = homePlayers[homeOnDeckIdx];
+                document.getElementById("homeTeam").style.backgroundColor = "yellow";
+                document.getElementById("awayTeam").style.backgroundColor = "white";
+            }
+
+            document.getElementById("balls").innerHTML = balls;
+            document.getElementById("strikes").innerHTML = strikes;
+            document.getElementById("outs").innerHTML = outs;
+
+
+            if (onFirst) {
+                document.getElementById("firstBase").innerHTML = '<img src="Images/DartBall/OccupiedBase.jpg" />';
+            }
+            else {
+                document.getElementById("firstBase").innerHTML = '<img src="Images/DartBall/OpenBase.jpg" />';
+            }
+
+            if (onSecond) {
+                document.getElementById("secondBase").innerHTML = '<img src="Images/DartBall/OccupiedBase.jpg" />';
+            }
+            else {
+                document.getElementById("secondBase").innerHTML = '<img src="Images/DartBall/OpenBase.jpg" />';
+            }
+
+            if (onThird) {
+                document.getElementById("thirdBase").innerHTML = '<img src="Images/DartBall/OccupiedBase.jpg" />';
+            }
+            else {
+                document.getElementById("thirdBase").innerHTML = '<img src="Images/DartBall/OpenBase.jpg" />';
+            }
+
+            if (inning > 8) {
+                document.getElementById("ninthHeading").innerHTML = '9 - ' + (inning + 1);
+            }
+        }
+
+        function nextBatter() {
+            if (teamAtBat == "AWAY") {
+                awayBatterIdx = awayBatterIdx + 1;
+                if (awayBatterIdx > 8) {
+                    awayBatterIdx = 0;
+                }
+                for (i = awayBatterIdx; i < 9; i++) {
+                    if (awayPlayers[i] != "") {
+                        awayBatterIdx = i;
+                        break;
+                    }
+                }
+                if (awayPlayers[awayBatterIdx] == "") {
+                    awayBatterIdx = 0;
+                }
+                awayOnDeckIdx = awayBatterIdx + 1;
+                if (awayOnDeckIdx > 8) {
+                    awayOnDeckIdx = 0;
+                }
+                for (i = awayOnDeckIdx; i < 9; i++) {
+                    if (awayPlayers[i] != "") {
+                        awayOnDeckIdx = i;
+                        break;
+                    }
+                }
+                if (awayPlayers[awayOnDeckIdx] == "") {
+                    awayOnDeckIdx = 0;
+                }
+            }
+            else {
+                homeBatterIdx = homeBatterIdx + 1;
+                if (homeBatterIdx > 8) {
+                    homeBatterIdx = 0;
+                }
+                for (i = homeBatterIdx; i < 9; i++) {
+                    if (homePlayers[i] != "") {
+                        homeBatterIdx = i;
+                        break;
+                    }
+                }
+                if (homePlayers[homeBatterIdx] == "") {
+                    homeBatterIdx = 0;
+                }
+                homeOnDeckIdx = homeBatterIdx + 1;
+                if (homeOnDeckIdx > 8) {
+                    homeOnDeckIdx = 0;
+                }
+                for (i = homeOnDeckIdx; i < 9; i++) {
+                    if (homePlayers[i] != "") {
+                        homeOnDeckIdx = i;
+                        break;
+                    }
+                }
+                if (homePlayers[homeOnDeckIdx] == "") {
+                    homeOnDeckIdx = 0;
+                }
+            }
+        }
+
+        function saveTeams() {
+            awayTeamName = document.getElementById("awayTeamName").value.trim();
+            homeTeamName = document.getElementById("homeTeamName").value.trim();
+
+            awayPlayers[0] = document.getElementById("awayPlayerName1").value.trim();
+            awayPlayers[1] = document.getElementById("awayPlayerName2").value.trim();
+            awayPlayers[2] = document.getElementById("awayPlayerName3").value.trim();
+            awayPlayers[3] = document.getElementById("awayPlayerName4").value.trim();
+            awayPlayers[4] = document.getElementById("awayPlayerName5").value.trim();
+            awayPlayers[5] = document.getElementById("awayPlayerName6").value.trim();
+            awayPlayers[6] = document.getElementById("awayPlayerName7").value.trim();
+            awayPlayers[7] = document.getElementById("awayPlayerName8").value.trim();
+            awayPlayers[8] = document.getElementById("awayPlayerName9").value.trim();
+
+            homePlayers[0] = document.getElementById("homePlayerName1").value.trim();
+            homePlayers[1] = document.getElementById("homePlayerName2").value.trim();
+            homePlayers[2] = document.getElementById("homePlayerName3").value.trim();
+            homePlayers[3] = document.getElementById("homePlayerName4").value.trim();
+            homePlayers[4] = document.getElementById("homePlayerName5").value.trim();
+            homePlayers[5] = document.getElementById("homePlayerName6").value.trim();
+            homePlayers[6] = document.getElementById("homePlayerName7").value.trim();
+            homePlayers[7] = document.getElementById("homePlayerName8").value.trim();
+            homePlayers[8] = document.getElementById("homePlayerName9").value.trim();
+
+            scoreDart("X");
+        }
+
+        function undo() {
+            outs = 0;
+            balls = 0;
+            strikes = 0;
+            awayBatterIdx = 0;
+            homeBatterIdx = 0;
+            onFirst = false;
+            onSecond = false;
+            onThird = false;
+            awayHits = 0;
+            homeHits = 0;
+            awayRuns = 0;
+            homeRuns = 0;
+            teamAtBat = "AWAY";
+            inning = 0;
+            runs = 0;
+            gameOver = false;
+
+            awayInningRuns = ["", "", "", "", "", "", "", "", ""];
+            homeInningRuns = ["", "", "", "", "", "", "", "", ""];
+
+            awayOnDeckIdx = awayBatterIdx + 1
+            if (awayOnDeckIdx > 8) {
+                awayOnDeckIdx = 0;
+            }
+            for (i = awayOnDeckIdx; i < 9; i++) {
+                if (awayPlayers[i] != "") {
+                    awayOnDeckIdx = i;
+                    break;
+                }
+            }
+            if (awayPlayers[awayOnDeckIdx] == "") {
+                awayOnDeckIdx = 0;
+            }
+
+            homeOnDeckIdx = homeBatterIdx + 1;
+            if (homeOnDeckIdx > 8) {
+                homeOnDeckIdx = 0;
+            }
+            for (i = homeOnDeckIdx; i < 9; i++) {
+                if (homePlayers[i] != "") {
+                    homeOnDeckIdx = i;
+                    break;
+                }
+            }
+            if (homePlayers[homeOnDeckIdx] == "") {
+                homeOnDeckIdx = 0;
+            }
+
+            darts.splice(darts.length - 1, 1);
+            var redo = darts;
+            darts = [];
+            if (redo.length == 0) {
+                scoreDart("X");
+            }
+            for (j = 0; j < redo.length; j++) {
+                scoreDart(redo[j]);
+            }
+
+        }
+
+    </script>
 
 </head>
 <body>
@@ -20,130 +731,213 @@
         </div>
 
         <div data-role="main" class="ui-content">
-            <table data-role="table" class="ui-responsive" border="1">
-                <thead>
+            <div id="main">
+                <table data-role="table" class="ui-responsive" border="1">
+                    <thead>
+                        <tr>
+                            <th style="text-align:center;" colspan="12">Inning</th>
+                        </tr>
+                        <tr>
+                            <th style="text-align:left;">Team</th>
+                            <th style="text-align:center;">1</th>
+                            <th style="text-align:center;">2</th>
+                            <th style="text-align:center;">3</th>
+                            <th style="text-align:center;">4</th>
+                            <th style="text-align:center;">5</th>
+                            <th style="text-align:center;">6</th>
+                            <th style="text-align:center;">7</th>
+                            <th style="text-align:center;">8</th>
+                            <th id="ninthHeading" style="text-align:center;">9</th>
+                            <th style="text-align:center;">R</th>
+                            <th style="text-align:center;">H</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td id="awayTeam" style="text-align:left; background-color:yellow;">Team 1</td>
+                            <td id="away1Runs" style="text-align:center;"></td>
+                            <td id="away2Runs" style="text-align:center;"></td>
+                            <td id="away3Runs" style="text-align:center;"></td>
+                            <td id="away4Runs" style="text-align:center;"></td>
+                            <td id="away5Runs" style="text-align:center;"></td>
+                            <td id="away6Runs" style="text-align:center;"></td>
+                            <td id="away7Runs" style="text-align:center;"></td>
+                            <td id="away8Runs" style="text-align:center;"></td>
+                            <td id="away9Runs" style="text-align:center;"></td>
+                            <td id="awayRuns" style="text-align:center;">0</td>
+                            <td id="awayHits" style="text-align:center;">0</td>
+                        </tr>
+                        <tr>
+                            <td id="homeTeam" style="text-align:left;">Team 2</td>
+                            <td id="home1Runs" style="text-align:center;"></td>
+                            <td id="home2Runs" style="text-align:center;"></td>
+                            <td id="home3Runs" style="text-align:center;"></td>
+                            <td id="home4Runs" style="text-align:center;"></td>
+                            <td id="home5Runs" style="text-align:center;"></td>
+                            <td id="home6Runs" style="text-align:center;"></td>
+                            <td id="home7Runs" style="text-align:center;"></td>
+                            <td id="home8Runs" style="text-align:center;"></td>
+                            <td id="home9Runs" style="text-align:center;"></td>
+                            <td id="homeRuns" style="text-align:center;">0</td>
+                            <td id="homeHits" style="text-align:center;">0</td>
+                        </tr>
+                    </tbody>
+                </table>
+                <p></p>
+                <table align="center">
                     <tr>
-                        <th style="text-align:center;" colspan="12">Inning</th>
+                        <td style="text-align:right;">At Bat:</td>
+                        <td id="atBat">T1 Player 1</td>
                     </tr>
                     <tr>
-                        <th style="text-align:left;">Team</th>
-                        <th style="text-align:center;">1</th>
-                        <th style="text-align:center;">2</th>
-                        <th style="text-align:center;">3</th>
-                        <th style="text-align:center;">4</th>
-                        <th style="text-align:center;">5</th>
-                        <th style="text-align:center;">6</th>
-                        <th style="text-align:center;">7</th>
-                        <th style="text-align:center;">8</th>
-                        <th style="text-align:center;">9</th>
-                        <th style="text-align:center;">R</th>
-                        <th style="text-align:center;">H</th>
+                        <td style="text-align:right;">On Deck:</td>
+                        <td id="onDeck">T1 Player 1</td>
                     </tr>
-                </thead>
-                <tbody>
+                </table>
+                <p></p>
+                <table align="center">
                     <tr>
-                        <td style="text-align:left;background-color:yellow;">Team 1</td>
-                        <td style="text-align:center;"></td>
-                        <td style="text-align:center;"></td>
-                        <td style="text-align:center;"></td>
-                        <td style="text-align:center;"></td>
-                        <td style="text-align:center;"></td>
-                        <td style="text-align:center;"></td>
-                        <td style="text-align:center;"></td>
-                        <td style="text-align:center;"></td>
-                        <td style="text-align:center;"></td>
-                        <td style="text-align:center;">0</td>
-                        <td style="text-align:center;">0</td>
+                        <td>
+                            <table style="width:100%;" align="center">
+                                <tr>
+                                    <td style="text-align:right;">Balls:</td>
+                                    <td id="balls">0</td>
+                                </tr>
+                                <tr>
+                                    <td style="text-align:right;">Strikes:</td>
+                                    <td id="strikes">0</td>
+                                </tr>
+                                <tr>
+                                    <td style="text-align:right;">Outs:</td>
+                                    <td id="outs">0</td>
+                                </tr>
+                            </table>
+                        </td>
+                        <td>
+                            <table class="auto-style1">
+                                <tr>
+                                    <td></td>
+                                    <td id="secondBase"><img src="Images/DartBall/OpenBase.jpg" /></td>
+                                    <td></td>
+                                </tr>
+                                <tr>
+                                    <td id="thirdBase"><img src="Images/DartBall/OpenBase.jpg" /></td>
+                                    <td></td>
+                                    <td id="firstBase"><img src="Images/DartBall/OpenBase.jpg" /></td>
+                                </tr>
+                            </table>
+                        </td>
+                    </tr>
+                </table>
+                <p></p>
+                <table align="center">
+                    <tr>
+                        <td style="width:15%;text-align:center;border: 1px solid black;padding: 15px;background-color:#0099FF;font-weight:bold;text-shadow:none;" onclick="scoreDart('Ball');">Ball</td>
+                        <td style="width:15%;text-align:center;border: 1px solid black;padding: 15px;background-color:#D6D6EB;font-weight:bold;text-shadow:none;" onclick="scoreDart('Strike');">Strike</td>
+                        <td style="width:15%;text-align:center;border: 1px solid black;padding: 15px;background-color:#99FF99;font-weight:bold;text-shadow:none;" onclick="scoreDart('Foul');">Foul</td>
+                        <td style="width:15%;text-align:center;border: 1px solid black;padding: 15px;background-color:#FF9900;font-weight:bold;text-shadow:none;" onclick="scoreDart('Out');">Out</td>
+                        <td style="width:15%;text-align:center;border: 1px solid black;padding: 15px;background-color:#D14719;font-weight:bold;text-shadow:none;" onclick="scoreDart('DP');">DP</td>
+                        <td style="width:15%;text-align:center;border: 1px solid black;padding: 15px;background-color:#D14719;font-weight:bold;text-shadow:none;" onclick="scoreDart('SH');">SH</td>
+                    </tr>
+                    <tr></tr>
+                    <tr>
+                        <td style="width:15%;text-align:center;border: 1px solid black;padding: 15px;font-weight:bold;" onclick="scoreDart('Single');">Single</td>
+                        <td style="width:15%;text-align:center;border: 1px solid black;padding: 15px;font-weight:bold;" onclick="scoreDart('Double');">Double</td>
+                        <td style="width:15%;text-align:center;border: 1px solid black;padding: 15px;font-weight:bold;" onclick="scoreDart('Triple');">Triple</td>
+                        <td style="width:15%;text-align:center;border: 1px solid black;padding: 15px;font-weight:bold;" onclick="scoreDart('HR');">HR</td>
+                        <td style="width:15%;text-align:center;border: 1px solid black;padding: 15px;font-weight:bold;" onclick="scoreDart('2BS');">2BS</td>
+                        <td style="width:15%;text-align:center;border: 1px solid black;padding: 15px;font-weight:bold;" onclick="undo();">Undo</td>
+                    </tr>
+                </table>
+                <p></p>
+                <table align="center">
+                    <tr>
+                        <td style="width:45%;text-align:center;border: 1px solid black;padding: 15px;font-weight:bold;" onclick="document.getElementById('main').style.display = 'none'; document.getElementById('teams').style.display = '';">Edit Teams</td>
+                        <td style="width:45%;text-align:center;border: 1px solid black;padding: 15px;font-weight:bold;" onclick="scoreDart('NewGame');">New Game</td>
+                    </tr>
+                </table>
+            </div>
+            <div id="teams" style="display:none">
+                <table class="auto-style1" border="0" align="center">
+                    <tr>
+                        <td style="text-align:right;">Away Team:</td>
+                        <td><input type="text" id="awayTeamName" name="awayTeamName" value="Team 1" onfocus="this.select()" style="text-align:left;" /></td>
+                        <td>&nbsp;&nbsp;&nbsp;&nbsp;</td>
+                        <td style="text-align:right;">Home Team:</td>
+                        <td><input type="text" id="homeTeamName" name="homeTeamNamex" value="Team 2" onfocus="this.select()" style="text-align:left;" /></td>
                     </tr>
                     <tr>
-                        <td style="text-align:left;">Team 2</td>
-                        <td style="text-align:center;"></td>
-                        <td style="text-align:center;"></td>
-                        <td style="text-align:center;"></td>
-                        <td style="text-align:center;"></td>
-                        <td style="text-align:center;"></td>
-                        <td style="text-align:center;"></td>
-                        <td style="text-align:center;"></td>
-                        <td style="text-align:center;"></td>
-                        <td style="text-align:center;"></td>
-                        <td style="text-align:center;">0</td>
-                        <td style="text-align:center;">0</td>
+                        <td style="text-align:right;">Player 1:</td>
+                        <td><input type="text" id="awayPlayerName1" name="awayPlayerName1" value="T1 Player 1" onfocus="this.select()" style="text-align:left;" /></td>
+                        <td>&nbsp;&nbsp;&nbsp;&nbsp;</td>
+                        <td style="text-align:right;">Player 1:</td>
+                        <td><input type="text" id="homePlayerName1" name="homePlayerName1" value="T2 Player 1" onfocus="this.select()" style="text-align:left;" /></td>
                     </tr>
-                </tbody>
-            </table>
-            <p></p>
-            <table align="center">
-                <tr>
-                    <td style="text-align:right;">At Bat:</td>
-                    <td>Player 1</td>
-                </tr>
-                <tr>
-                    <td style="text-align:right;">On Deck:</td>
-                    <td>Player 1</td>
-                </tr>
-            </table>
-            <p></p>
-            <table align="center">
-                <tr>
-                    <td>
-                        <table style="width:100%;" align="center">
-                            <tr>
-                                <td style="text-align:right;">Balls:</td>
-                                <td>0</td>
-                            </tr>
-                            <tr>
-                                <td style="text-align:right;">Strikes:</td>
-                                <td>0</td>
-                            </tr>
-                            <tr>
-                                <td style="text-align:right;">Outs:</td>
-                                <td>0</td>
-                            </tr>
-                        </table>
-                    </td>
-                    <td>
-                        <table class="auto-style1">
-                            <tr>
-                                <td></td>
-                                <td><img src="img/OpenBase.jpg" /></td>
-                                <td></td>
-                            </tr>
-                            <tr>
-                                <td><img src="img/OpenBase.jpg" /></td>
-                                <td></td>
-                                <td><img src="img/OpenBase.jpg" /></td>
-                            </tr>
-                        </table>
-                    </td>
-                </tr>
-            </table>
-            <p></p>
-            <table align="center">
-                <tr>
-                    <td style="width:15%;text-align:center;border: 1px solid black;padding: 15px;background-color:#0099FF;font-weight:bold;text-shadow:none;">Ball</td>
-                    <td style="width:15%;text-align:center;border: 1px solid black;padding: 15px;background-color:#D6D6EB;font-weight:bold;text-shadow:none;">Strike</td>
-                    <td style="width:15%;text-align:center;border: 1px solid black;padding: 15px;background-color:#99FF99;font-weight:bold;text-shadow:none;">Foul</td>
-                    <td style="width:15%;text-align:center;border: 1px solid black;padding: 15px;background-color:#FF9900;font-weight:bold;text-shadow:none;">Out</td>
-                    <td style="width:15%;text-align:center;border: 1px solid black;padding: 15px;background-color:#D14719;font-weight:bold;text-shadow:none;">DP</td>
-                    <td style="width:15%;text-align:center;border: 1px solid black;padding: 15px;background-color:#D14719;font-weight:bold;text-shadow:none;">SH</td>
-                </tr>
-                <tr></tr>
-                <tr>
-                    <td style="width:15%;text-align:center;border: 1px solid black;padding: 15px;font-weight:bold;">Single</td>
-                    <td style="width:15%;text-align:center;border: 1px solid black;padding: 15px;font-weight:bold;">Double</td>
-                    <td style="width:15%;text-align:center;border: 1px solid black;padding: 15px;font-weight:bold;">Triple</td>
-                    <td style="width:15%;text-align:center;border: 1px solid black;padding: 15px;font-weight:bold;">HR</td>
-                    <td style="width:15%;text-align:center;border: 1px solid black;padding: 15px;font-weight:bold;">2BS</td>
-                    <td style="width:15%;text-align:center;border: 1px solid black;padding: 15px;font-weight:bold;">Undo</td>
-                </tr>
-            </table>
-            <p></p>
-            <table align="center">
-                <tr>
-                    <td style="width:45%;text-align:center;border: 1px solid black;padding: 15px;font-weight:bold;">Edit Teams</td>
-                    <td style="width:45%;text-align:center;border: 1px solid black;padding: 15px;font-weight:bold;">New Game</td>
-                </tr>
-            </table>
+                    <tr>
+                        <td style="text-align:right;">Player 2:</td>
+                        <td><input type="text" id="awayPlayerName2" name="awayPlayerName2" value="" onfocus="this.select()" style="text-align:left;" /></td>
+                        <td>&nbsp;&nbsp;&nbsp;&nbsp;</td>
+                        <td style="text-align:right;">Player 2:</td>
+                        <td><input type="text" id="homePlayerName2" name="homePlayerName2" value="" onfocus="this.select()" style="text-align:left;" /></td>
+                    </tr>
+                    <tr>
+                        <td style="text-align:right;">Player 3:</td>
+                        <td><input type="text" id="awayPlayerName3" name="awayPlayerName3" value="" onfocus="this.select()" style="text-align:left;" /></td>
+                        <td>&nbsp;&nbsp;&nbsp;&nbsp;</td>
+                        <td style="text-align:right;">Player 3:</td>
+                        <td><input type="text" id="homePlayerName3" name="homePlayerName3" value="" onfocus="this.select()" style="text-align:left;" /></td>
+                    </tr>
+                    <tr>
+                        <td style="text-align:right;">Player 4:</td>
+                        <td><input type="text" id="awayPlayerName4" name="awayPlayerName4" value="" onfocus="this.select()" style="text-align:left;" /></td>
+                        <td>&nbsp;&nbsp;&nbsp;&nbsp;</td>
+                        <td style="text-align:right;">Player 4:</td>
+                        <td><input type="text" id="homePlayerName4" name="homePlayerName4" value="" onfocus="this.select()" style="text-align:left;" /></td>
+                    </tr>
+                    <tr>
+                        <td style="text-align:right;">Player 5:</td>
+                        <td><input type="text" id="awayPlayerName5" name="awayPlayerName5" value="" onfocus="this.select()" style="text-align:left;" /></td>
+                        <td>&nbsp;&nbsp;&nbsp;&nbsp;</td>
+                        <td style="text-align:right;">Player 5:</td>
+                        <td><input type="text" id="homePlayerName5" name="homePlayerName5" value="" onfocus="this.select()" style="text-align:left;" /></td>
+                    </tr>
+                    <tr>
+                        <td style="text-align:right;">Player 6:</td>
+                        <td><input type="text" id="awayPlayerName6" name="awayPlayerName6" value="" onfocus="this.select()" style="text-align:left;" /></td>
+                        <td>&nbsp;&nbsp;&nbsp;&nbsp;</td>
+                        <td style="text-align:right;">Player 6:</td>
+                        <td><input type="text" id="homePlayerName6" name="homePlayerName6" value="" onfocus="this.select()" style="text-align:left;" /></td>
+                    </tr>
+                    <tr>
+                        <td style="text-align:right;">Player 7:</td>
+                        <td><input type="text" id="awayPlayerName7" name="awayPlayerName7" value="" onfocus="this.select()" style="text-align:left;" /></td>
+                        <td>&nbsp;&nbsp;&nbsp;&nbsp;</td>
+                        <td style="text-align:right;">Player 7:</td>
+                        <td><input type="text" id="homePlayerName7" name="homePlayerName7" value="" onfocus="this.select()" style="text-align:left;" /></td>
+                    </tr>
+                    <tr>
+                        <td style="text-align:right;">Player 8:</td>
+                        <td><input type="text" id="awayPlayerName8" name="awayPlayerName8" value="" onfocus="this.select()" style="text-align:left;" /></td>
+                        <td>&nbsp;&nbsp;&nbsp;&nbsp;</td>
+                        <td style="text-align:right;">Player 8:</td>
+                        <td><input type="text" id="homePlayerName8" name="homePlayerName8" value="" onfocus="this.select()" style="text-align:left;" /></td>
+                    </tr>
+                    <tr>
+                        <td style="text-align:right;">Player 9:</td>
+                        <td><input type="text" id="awayPlayerName9" name="awayPlayerName9" value="" onfocus="this.select()" style="text-align:left;" /></td>
+                        <td>&nbsp;&nbsp;&nbsp;&nbsp;</td>
+                        <td style="text-align:right;">Player 9:</td>
+                        <td><input type="text" id="homePlayerName9" name="homePlayerName9" value="" onfocus="this.select()" style="text-align:left;" /></td>
+                    </tr>
+                </table>
+                <p></p>
+                <table align="center">
+                    <tr>
+                        <td style="width:45%;text-align:center;border: 1px solid black;padding: 15px;font-weight:bold;" onclick="saveTeams(); document.getElementById('main').style.display = ''; document.getElementById('teams').style.display = 'none';">Done</td>
+                    </tr>
+                </table>
+            </div>
+
         </div>
     </div>
 </body>
