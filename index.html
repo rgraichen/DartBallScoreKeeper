@@ -1,9 +1,9 @@
 <html>
 <head>
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link rel="stylesheet" href="css/jquery.mobile-1.4.5.min.css">
-    <script src="lib/jquery-1.11.1.min.js"></script>
-    <script src="lib/jquery.mobile-1.4.5.min.js"></script>
+    <link rel="stylesheet" href="http://code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.css">
+    <script src="http://code.jquery.com/jquery-1.11.1.min.js"></script>
+    <script src="http://code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.js"></script>
     <style>
         th {
             background: #e9e9e9;
@@ -444,29 +444,55 @@
                 nextBatter();
             }
 
-            if (outs >= 3) {
-                if (teamAtBat == "AWAY") {
-                    awayInningRuns[inning] = "" + runs;
+            if (inning >= 8 && awayRuns < homeRuns && teamAtBat == "HOME") {
+                gameOver = true;
+                outs = 0;
+                balls = 0;
+                strikes = 0;
+                onFirst = false;
+                onSecond = false;
+                onThird = false;
+                alert("Game Over!");
+            }
+
+
+            if (outs >= 3 && !gameOver) {
+                if (inning <= 8) {
+                    if (teamAtBat == "AWAY") {
+                        awayInningRuns[inning] = "" + runs;
+                    }
+                    else {
+                        homeInningRuns[inning] = "" + runs;
+                    }
+                    runs = 0;
                 }
-                else {
-                    homeInningRuns[inning] = "" + runs;
-                }
-                runs = 0;
 
                 if (teamAtBat == "AWAY") {
-                    teamAtBat = "HOME";
-                    homeOnDeckIdx = homeBatterIdx + 1;
-                    if (homeOnDeckIdx > 8) {
-                        homeOnDeckIdx = 0;
+                    if (inning >= 8 && awayRuns < homeRuns) {
+                        gameOver = true;
+                        outs = 0;
+                        balls = 0;
+                        strikes = 0;
+                        onFirst = false;
+                        onSecond = false;
+                        onThird = false;
+                        alert("Game Over!");
                     }
-                    for (i = homeOnDeckIdx; i < 9; i++) {
-                        if (homePlayers[i] != "") {
-                            homeOnDeckIdx = i;
-                            break;
+                    else {
+                        teamAtBat = "HOME";
+                        homeOnDeckIdx = homeBatterIdx + 1;
+                        if (homeOnDeckIdx > 8) {
+                            homeOnDeckIdx = 0;
                         }
-                    }
-                    if (homePlayers[homeOnDeckIdx] == "") {
-                        homeOnDeckIdx = 0;
+                        for (i = homeOnDeckIdx; i < 9; i++) {
+                            if (homePlayers[i] != "") {
+                                homeOnDeckIdx = i;
+                                break;
+                            }
+                        }
+                        if (homePlayers[homeOnDeckIdx] == "") {
+                            homeOnDeckIdx = 0;
+                        }
                     }
                 }
                 else {
@@ -566,10 +592,6 @@
             }
             else {
                 document.getElementById("thirdBase").innerHTML = '<img src="img/OpenBase.jpg" />';
-            }
-
-            if (inning > 8) {
-                document.getElementById("ninthHeading").innerHTML = '9 - ' + (inning + 1);
             }
         }
 
